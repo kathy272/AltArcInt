@@ -1,7 +1,10 @@
+using System;
+using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using LLMUnity;
+using TMPro;
 using UnityEngine.UI;
 
 namespace LLMUnitySamples
@@ -19,19 +22,30 @@ namespace LLMUnitySamples
         public float textPadding = 10f;
         public float bubbleSpacing = 10f;
         public Sprite sprite;
-        public Button stopButton;
 
-        private InputBubble inputBubble;
         private List<Bubble> chatBubbles = new List<Bubble>();
-        private bool blockInput = true;
-        private BubbleUI playerUI, aiUI;
-        private bool warmUpDone = false;
+        private BubbleUI aiUI;
         private int lastBubbleOutsideFOV = -1;
+
+        [SerializeField] private TextMeshProUGUI aiText;
+        private string _aiResponseText;
+        private bool _finishedTextGeneration;
+        
+        private Dictionary<string, string> _characterColors;
+
+        
+        private Coroutine _aiTextTimerCoroutine;
+        private bool _startedTextGeneration;
+
+        
+        public float scrollSpeed = 50;
+
+        public Button startButton;
 
         void Start()
         {
             if (font == null) font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            playerUI = new BubbleUI
+            aiUI = new BubbleUI
             {
                 sprite = sprite,
                 font = font,
@@ -45,106 +59,61 @@ namespace LLMUnitySamples
                 bubbleWidth = bubbleWidth,
                 bubbleHeight = -1
             };
-            aiUI = playerUI;
             aiUI.bubbleColor = aiColor;
             aiUI.leftPosition = 1;
-
-            inputBubble = new InputBubble(chatContainer, playerUI, "InputBubble", "Loading...", 4);
-            inputBubble.AddSubmitListener(onInputFieldSubmit);
-            inputBubble.AddValueChangedListener(onValueChanged);
-            inputBubble.setInteractable(false);
-            stopButton.gameObject.SetActive(true);
-            _ = llmCharacter.Warmup(WarmUpCallback);
+            
+            _characterColors = new Dictionary<string, string>
+            {
+                { "JIM", "<color=#00FF00>" }, // Green
+                { "LUCY", "<color=#FF0000>" }, // Red
+                { "ALLEN", "<color=#0000FF>" }, // Blue
+                
+                { "Jim", "<color=#00FF00>" }, // Green
+                { "Lucy", "<color=#FF0000>" }, // Red
+                { "Allen", "<color=#0000FF>" } // Blue
+            };
+            
         }
 
-        void onInputFieldSubmit(string newText)
-        {
-            inputBubble.ActivateInputField();
-            if (blockInput || newText.Trim() == "" || Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
-            {
-                StartCoroutine(BlockInteraction());
-                return;
-            }
-            blockInput = true;
-            // replace vertical_tab
-            string message = inputBubble.GetText().Replace("\v", "\n");
 
-            Bubble playerBubble = new Bubble(chatContainer, playerUI, "PlayerBubble", message);
+        public void StartGeneration()
+        {
             Bubble aiBubble = new Bubble(chatContainer, aiUI, "AIBubble", "...");
-            chatBubbles.Add(playerBubble);
             chatBubbles.Add(aiBubble);
-            playerBubble.OnResize(UpdateBubblePositions);
-            aiBubble.OnResize(UpdateBubblePositions);
-
-            Task chatTask = llmCharacter.Chat(message, aiBubble.SetText, AllowInput);
-            inputBubble.SetText("");
-        }
-
-        public void WarmUpCallback()
-        {
-            warmUpDone = true;
-            inputBubble.SetPlaceHolderText("Message me");
-            AllowInput();
-        }
-
-        public void AllowInput()
-        {
-            blockInput = false;
-            inputBubble.ReActivateInputField();
-        }
-
-        public void CancelRequests()
-        {
-            llmCharacter.CancelRequests();
-            AllowInput();
-        }
-
-        IEnumerator<string> BlockInteraction()
-        {
-            // prevent from change until next frame
-            inputBubble.setInteractable(false);
-            yield return null;
-            inputBubble.setInteractable(true);
-            // change the caret position to the end of the text
-            inputBubble.MoveTextEnd();
-        }
-
-        void onValueChanged(string newText)
-        {
-            // Get rid of newline character added when we press enter
-            if (Input.GetKey(KeyCode.Return))
+            
+            Task chatTask = llmCharacter.Chat("write a unique script incorporating 3 characters", (responseText) =>
             {
-                if (inputBubble.GetText().Trim() == "")
-                    inputBubble.SetText("");
-            }
-        }
-
-        public void UpdateBubblePositions()
-        {
-            float y = inputBubble.GetSize().y + inputBubble.GetRectTransform().offsetMin.y + bubbleSpacing;
-            float containerHeight = chatContainer.GetComponent<RectTransform>().rect.height;
-            for (int i = chatBubbles.Count - 1; i >= 0; i--)
-            {
-                Bubble bubble = chatBubbles[i];
-                RectTransform childRect = bubble.GetRectTransform();
-                childRect.anchoredPosition = new Vector2(childRect.anchoredPosition.x, y);
-
-                // last bubble outside the container
-                if (y > containerHeight && lastBubbleOutsideFOV == -1)
+                aiBubble.SetText(responseText);
+                _aiResponseText = responseText;
+                if (_aiTextTimerCoroutine != null)
                 {
-                    lastBubbleOutsideFOV = i;
+                    StopCoroutine(_aiTextTimerCoroutine);
+                    _aiTextTimerCoroutine = null;
                 }
-                y += bubble.GetSize().y + bubbleSpacing;
-            }
+                _aiTextTimerCoroutine = StartCoroutine(AITextTimer());
+            },OnFullResponseReceived);
+            
+            _startedTextGeneration = true;
         }
+        
+        public void OnFullResponseReceived()
+        {
+            Debug.Log("Full response received");
+        }
+        
+        private IEnumerator AITextTimer()
+        {
+            float timer = 1f;
 
+            while (timer > 0)
+            {
+                timer -= Time.deltaTime; 
+                yield return null; 
+            }
+            _finishedTextGeneration = true;
+        }
         void Update()
         {
-            if (!inputBubble.inputFocused() && warmUpDone)
-            {
-                inputBubble.ActivateInputField();
-                StartCoroutine(BlockInteraction());
-            }
             if (lastBubbleOutsideFOV != -1)
             {
                 // destroy bubbles outside the container
@@ -155,11 +124,16 @@ namespace LLMUnitySamples
                 chatBubbles.RemoveRange(0, lastBubbleOutsideFOV + 1);
                 lastBubbleOutsideFOV = -1;
             }
+
+            if (_startedTextGeneration)
+            {
+                StartCoroutine(UpdateAIText());
+                _startedTextGeneration = false;
+            }
         }
 
         public void ExitGame()
         {
-            Debug.Log("Exit button clicked");
             Application.Quit();
         }
 
@@ -172,5 +146,45 @@ namespace LLMUnitySamples
                 onValidateWarning = false;
             }
         }
+
+        private IEnumerator UpdateAIText()
+        {
+            yield return new WaitUntil(() => _finishedTextGeneration);
+            SetAIResponseText(_aiResponseText);
+        }
+        
+        public void SetAIResponseText(string responseText)
+        {
+            // Color the character names in the response text
+            foreach (var character in _characterColors)
+            {
+                responseText = responseText.Replace(character.Key, character.Value + character.Key + "</color>");
+            }
+
+            // Set the formatted text
+            aiText.text = responseText;
+            
+            LayoutRebuilder.ForceRebuildLayoutImmediate(aiText.GetComponent<RectTransform>());
+
+
+            StartCoroutine(ScrollText());
+        }
+
+        private IEnumerator ScrollText()
+        {
+            RectTransform rectTransform = aiText.GetComponent<RectTransform>();
+    
+            float startY = rectTransform.anchoredPosition.y;
+            
+            float scrollHeightLimit = rectTransform.rect.height;
+            
+            while (rectTransform.anchoredPosition.y < scrollHeightLimit * 2)
+            {
+                rectTransform.anchoredPosition += new Vector2(0, scrollSpeed * Time.deltaTime);
+                yield return null; 
+            }
+            rectTransform.anchoredPosition = new Vector2(0,startY);
+        }
+
     }
 }
