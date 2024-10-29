@@ -14,4 +14,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/JoinPage.unity
     guid: d96dda47e772acf4a8ed3c64c55aa50b
+  - enabled: 1
+    path: Assets/Scenes/UIPage.unity
+    guid: 4d654b6493ad10747bf598599c9a071f
+  - enabled: 1
+    path: Assets/Scenes/ProfilePage.unity
+    guid: a4b942ef4bf2d86468ba444d4c7168c1
   m_configObjects: {}

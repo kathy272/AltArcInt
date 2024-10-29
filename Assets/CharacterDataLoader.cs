@@ -5,17 +5,8 @@ using UnityEngine.UI;
 
 public class CharacterDataLoader : MonoBehaviour
 {
-    [System.Serializable]
-    public class Character
-    {
-        public int id;
-        public string name;
-        public int age; // Changed to int based on your JSON structure
-        public string descShort;
-        public string descLong;
-        public string quirk;
-        public List<string> props;
-    }
+  
+    public Character character;
 
     [System.Serializable]
     public class CharacterData
@@ -37,8 +28,11 @@ public class CharacterDataLoader : MonoBehaviour
     public string characterImgPath = "Assets/UI/CharacterImg/";
     public RawImage characterImage;
     public List<Character> selectedCharacters = new List<Character>(); // List to hold selected characters
-    public GameObject teamPanel; // Reference to the UI panel for displaying selected characters
     public GameObject characterPanelPrefab;
+    public GameObject teamPanel;
+    public Button deleteButton;
+
+    public GameObject AddCharacterPanel;
     private void Start()
     {
         LoadCharacterData();
@@ -113,9 +107,12 @@ public class CharacterDataLoader : MonoBehaviour
         }
         if (characterPanelParent.childCount >= maxCharacterPanels)
         {
+            //hide AddPanel
+            AddCharacterPanel.SetActive(false);
             Debug.LogWarning("Maximum number of character panels reached. Cannot add more.");
             return; 
         }
+        AddCharacterPanel.SetActive(true);
 
         // Select a random character from the list
         int randomIndex = Random.Range(0, characters.Count);
@@ -140,6 +137,7 @@ public class CharacterDataLoader : MonoBehaviour
         {
             int propIndex = Random.Range(0, selectedCharacter.props.Count);
             propsText.text = "Props: " + selectedCharacter.props[propIndex]; // Display one random prop
+          //  AddProp(selectedCharacter.props[propIndex]);
         }
         else
         {
@@ -162,10 +160,72 @@ public class CharacterDataLoader : MonoBehaviour
 
         Debug.Log("Loading image from: " + imgPath);
 
+        AddCharacter(selectedCharacter);
         // Remove the character from the list to avoid re-selection
         characters.RemoveAt(randomIndex);
     }
 
+    //get all the playerNames that are added
+    public List<string> GetPlayerNames()
+    {
+        List<string> playerNames = new List<string>();
+        foreach (Character character in selectedCharacters)
+        {
+            playerNames.Add(character.name);
+        }
+        return playerNames;
+    }
+
+    //get all the props that are added
+    public List<string> GetProps()
+    {
+        List<string> props = new List<string>();
+        foreach (Character character in selectedCharacters)
+        {
+            if (character.props.Count > 0)
+            {
+                int propIndex = Random.Range(0, character.props.Count);
+                props.Add(character.props[propIndex]);
+            }
+        }
+        return props;
+    }
+
+    //get the single prop that is added
+    public string GetSingleProp()
+    {
+        string prop = "";
+        foreach (Character character in selectedCharacters)
+        {
+            if (character.props.Count > 0)
+            {
+                int propIndex = Random.Range(0, character.props.Count);
+                prop = character.props[propIndex];
+            }
+        }
+        return prop;
+    }
+    //add character to list
+    public void AddCharacter(Character character)
+    {
+        selectedCharacters.Add(character);
+    }
+    //add prop to list
+    public void AddProp(string prop)
+    {
+        selectedCharacters.Add(character);
+    }
+    public int GetPropsCount()
+    {
+        return GetProps().Count;
+    }
+    //get playerCount
+    public int GetPlayerCount()
+    {
+        return selectedCharacters.Count;
+    }
+
+  
 
 }
 
