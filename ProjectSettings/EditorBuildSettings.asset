@@ -6,18 +6,18 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/VotingPage.unity
+    path: Assets/Scenes/Not needed/VotingPage.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
-    path: Assets/Scenes/RolePage.unity
+    path: Assets/Scenes/Not needed/RolePage.unity
     guid: 920bbecb18a60ef4c8665b6fa1cfcb01
   - enabled: 1
-    path: Assets/Scenes/JoinPage.unity
+    path: Assets/Scenes/Not needed/JoinPage.unity
     guid: d96dda47e772acf4a8ed3c64c55aa50b
   - enabled: 1
     path: Assets/Scenes/UIPage.unity
     guid: 4d654b6493ad10747bf598599c9a071f
   - enabled: 1
-    path: Assets/Scenes/ProfilePage.unity
+    path: Assets/Scenes/Not needed/ProfilePage.unity
     guid: a4b942ef4bf2d86468ba444d4c7168c1
   m_configObjects: {}

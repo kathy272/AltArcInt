@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using LLMUnity;
 using TMPro;
@@ -12,23 +13,15 @@ namespace LLMUnitySamples
     public class ChatBot : MonoBehaviour
     {
         public LLMCharacter llmCharacter;
-        public string promptText;
+        public Text promptText;
         
         [SerializeField] private TextMeshProUGUI aiText;
         private string _aiResponseText;
-        private bool _finishedTextGeneration;
         
         private Dictionary<string, string> _characterColors;
-
-        
-        private Coroutine _aiTextTimerCoroutine;
-        private bool _startedTextGeneration;
-
         
         public float scrollSpeed = 50;
-
-        public Button startButton;
-
+        
         void Start()
         {
             
@@ -49,7 +42,7 @@ namespace LLMUnitySamples
         public void StartGeneration()
         {
             
-            Task chatTask = llmCharacter.Chat("write a unique script incorporating 3 characters", (responseText) =>
+            Task chatTask = llmCharacter.Chat(promptText.text, (responseText) =>
             {
                 _aiResponseText = responseText;
                
@@ -59,18 +52,6 @@ namespace LLMUnitySamples
         public void OnFullResponseReceived()
         {
             SetAIResponseText(_aiResponseText);
-        }
-        
-        private IEnumerator AITextTimer()
-        {
-            float timer = 1f;
-
-            while (timer > 0)
-            {
-                timer -= Time.deltaTime; 
-                yield return null; 
-            }
-            _finishedTextGeneration = true;
         }
 
         public void ExitGame()
