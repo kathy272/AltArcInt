@@ -16,13 +16,8 @@ public class promptEditor : MonoBehaviour
         string[] adjectives = { "Mysteriuos", "Majestic", "Enigmatic", "Dazzing", "Quirky", "Silly", "Crazy", "Vibrant", "Fancy", "Glamorous" };
         string[] nouns = { " Cookie", " Spider", " Singer", " TV", " Girl friend", " Performance", " Opportunity", " News", " Birthday", " Chocolate" };
         string randomName = adjectives[Random.Range(0, adjectives.Length)] + nouns[Random.Range(0, nouns.Length)]; 
-        // Debug.Log(scriptName.text);
-
-        string playerCount = characterDataLoader.GetPlayerCount().ToString();
-
-        scriptName.text = randomName;
         
-
+        scriptName.text = randomName;
     }
 
     public void EditTextBox(Text textBox)

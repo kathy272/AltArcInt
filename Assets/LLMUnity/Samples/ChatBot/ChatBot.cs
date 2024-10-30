@@ -27,14 +27,28 @@ namespace LLMUnitySamples
             
             _characterColors = new Dictionary<string, string>
             {
-                { "JIM", "<color=#00FF00>" }, // Green
-                { "LUCY", "<color=#FF0000>" }, // Red
-                { "ALLEN", "<color=#0000FF>" }, // Blue
-                
-                { "Jim", "<color=#00FF00>" }, // Green
-                { "Lucy", "<color=#FF0000>" }, // Red
-                { "Allen", "<color=#0000FF>" } // Blue
+                { "Jake", "<color=#FFD1BA>" },  // Apricot
+                { "JAKE", "<color=#FFD1BA>" },  // Apricot (Uppercase)
+    
+                { "Maggie", "<color=#22AED1>" }, // Pacific Cyan
+                { "MAGGIE", "<color=#22AED1>" }, // Pacific Cyan (Uppercase)
+
+                { "Ben", "<color=#64F58D>" },    // Spring Green
+                { "BEN", "<color=#64F58D>" },    // Spring Green (Uppercase)
+
+                { "Lola", "<color=#F03A47>" },   // Imperial Red
+                { "LOLA", "<color=#F03A47>" },   // Imperial Red (Uppercase)
+
+                { "Rachel", "<color=#E6C229>" }, // Saffron
+                { "RACHEL", "<color=#E6C229>" }, // Saffron (Uppercase)
+
+                { "Gary", "<color=#6610F2>" },   // Electric Indigo
+                { "GARY", "<color=#6610F2>" },   // Electric Indigo (Uppercase)
+
+                { "Todd", "<color=#870058>" },   // Murrey
+                { "TODD", "<color=#870058>" }    // Murrey (Uppercase)
             };
+
             
         }
 
