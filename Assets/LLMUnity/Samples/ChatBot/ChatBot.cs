@@ -11,22 +11,9 @@ namespace LLMUnitySamples
 {
     public class ChatBot : MonoBehaviour
     {
-        public Transform chatContainer;
-        public Color playerColor = new Color32(81, 164, 81, 255);
-        public Color aiColor = new Color32(29, 29, 73, 255);
-        public Color fontColor = Color.white;
-        public Font font;
-        public int fontSize = 16;
-        public int bubbleWidth = 600;
         public LLMCharacter llmCharacter;
-        public float textPadding = 10f;
-        public float bubbleSpacing = 10f;
-        public Sprite sprite;
-
-        private List<Bubble> chatBubbles = new List<Bubble>();
-        private BubbleUI aiUI;
-        private int lastBubbleOutsideFOV = -1;
-
+        public string promptText;
+        
         [SerializeField] private TextMeshProUGUI aiText;
         private string _aiResponseText;
         private bool _finishedTextGeneration;
@@ -44,23 +31,6 @@ namespace LLMUnitySamples
 
         void Start()
         {
-            if (font == null) font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            aiUI = new BubbleUI
-            {
-                sprite = sprite,
-                font = font,
-                fontSize = fontSize,
-                fontColor = fontColor,
-                bubbleColor = playerColor,
-                bottomPosition = 0,
-                leftPosition = 0,
-                textPadding = textPadding,
-                bubbleOffset = bubbleSpacing,
-                bubbleWidth = bubbleWidth,
-                bubbleHeight = -1
-            };
-            aiUI.bubbleColor = aiColor;
-            aiUI.leftPosition = 1;
             
             _characterColors = new Dictionary<string, string>
             {
@@ -78,27 +48,17 @@ namespace LLMUnitySamples
 
         public void StartGeneration()
         {
-            Bubble aiBubble = new Bubble(chatContainer, aiUI, "AIBubble", "...");
-            chatBubbles.Add(aiBubble);
             
             Task chatTask = llmCharacter.Chat("write a unique script incorporating 3 characters", (responseText) =>
             {
-                aiBubble.SetText(responseText);
                 _aiResponseText = responseText;
-                if (_aiTextTimerCoroutine != null)
-                {
-                    StopCoroutine(_aiTextTimerCoroutine);
-                    _aiTextTimerCoroutine = null;
-                }
-                _aiTextTimerCoroutine = StartCoroutine(AITextTimer());
+               
             },OnFullResponseReceived);
-            
-            _startedTextGeneration = true;
         }
         
         public void OnFullResponseReceived()
         {
-            Debug.Log("Full response received");
+            SetAIResponseText(_aiResponseText);
         }
         
         private IEnumerator AITextTimer()
@@ -111,25 +71,6 @@ namespace LLMUnitySamples
                 yield return null; 
             }
             _finishedTextGeneration = true;
-        }
-        void Update()
-        {
-            if (lastBubbleOutsideFOV != -1)
-            {
-                // destroy bubbles outside the container
-                for (int i = 0; i <= lastBubbleOutsideFOV; i++)
-                {
-                    chatBubbles[i].Destroy();
-                }
-                chatBubbles.RemoveRange(0, lastBubbleOutsideFOV + 1);
-                lastBubbleOutsideFOV = -1;
-            }
-
-            if (_startedTextGeneration)
-            {
-                StartCoroutine(UpdateAIText());
-                _startedTextGeneration = false;
-            }
         }
 
         public void ExitGame()
@@ -146,12 +87,6 @@ namespace LLMUnitySamples
                 onValidateWarning = false;
             }
         }
-
-        private IEnumerator UpdateAIText()
-        {
-            yield return new WaitUntil(() => _finishedTextGeneration);
-            SetAIResponseText(_aiResponseText);
-        }
         
         public void SetAIResponseText(string responseText)
         {
@@ -165,8 +100,7 @@ namespace LLMUnitySamples
             aiText.text = responseText;
             
             LayoutRebuilder.ForceRebuildLayoutImmediate(aiText.GetComponent<RectTransform>());
-
-
+            
             StartCoroutine(ScrollText());
         }
 
@@ -184,6 +118,7 @@ namespace LLMUnitySamples
                 yield return null; 
             }
             rectTransform.anchoredPosition = new Vector2(0,startY);
+            aiText.text = "Loading...";
         }
 
     }
