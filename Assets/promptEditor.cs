@@ -13,7 +13,7 @@ public class promptEditor : MonoBehaviour
     
     public void GenerateRandomScriptName()
     {
-        string[] adjectives = { "Mysteriuos", "Majestic", "Enigmatic", "Dazzing", "Quirky", "Silly", "Crazy", "Vibrant", "Fancy", "Glamorous" };
+        string[] adjectives = { "Mysterious", "Majestic", "Enigmatic", "Dazzling", "Quirky", "Silly", "Crazy", "Vibrant", "Fancy", "Glamorous" };
         string[] nouns = { " Cookie", " Spider", " Singer", " TV", " Girl friend", " Performance", " Opportunity", " News", " Birthday", " Chocolate" };
         string randomName = adjectives[Random.Range(0, adjectives.Length)] + nouns[Random.Range(0, nouns.Length)]; 
         

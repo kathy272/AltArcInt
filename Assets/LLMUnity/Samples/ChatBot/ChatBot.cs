@@ -21,10 +21,13 @@ namespace LLMUnitySamples
         private Dictionary<string, string> _characterColors;
         
         public float scrollSpeed = 50;
+
+        public Button StartGenerationBtn;
+        public GameObject ScrollSpeeds;
         
         void Start()
         {
-            
+            ScrollSpeeds.SetActive(false);
             _characterColors = new Dictionary<string, string>
             {
                 { "Jake", "<color=#FFD1BA>" },  // Apricot
@@ -55,7 +58,8 @@ namespace LLMUnitySamples
 
         public void StartGeneration()
         {
-            
+            StartGenerationBtn.gameObject.SetActive(false);
+            ScrollSpeeds.SetActive(true);
             Task chatTask = llmCharacter.Chat(promptText.text, (responseText) =>
             {
                 _aiResponseText = responseText;
@@ -85,13 +89,11 @@ namespace LLMUnitySamples
         
         public void SetAIResponseText(string responseText)
         {
-            // Color the character names in the response text
             foreach (var character in _characterColors)
             {
                 responseText = responseText.Replace(character.Key, character.Value + character.Key + "</color>");
             }
 
-            // Set the formatted text
             aiText.text = responseText;
             
             LayoutRebuilder.ForceRebuildLayoutImmediate(aiText.GetComponent<RectTransform>());
@@ -113,8 +115,23 @@ namespace LLMUnitySamples
                 yield return null; 
             }
             rectTransform.anchoredPosition = new Vector2(0,startY);
+            ScrollSpeeds.SetActive(false);
+            StartGenerationBtn.gameObject.SetActive(true);
             aiText.text = "Loading...";
         }
 
+        
+        public void SetScrollSpeedLow()
+        {
+            scrollSpeed = 30;
+        }
+        public void SetScrollSpeedMed()
+        {
+            scrollSpeed = 50;
+        }
+        public void SetScrollSpeedHigh()
+        {
+            scrollSpeed = 70;
+        }
     }
 }

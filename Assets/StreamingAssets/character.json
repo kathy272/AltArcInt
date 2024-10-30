@@ -7,7 +7,7 @@
             "descShort": "quirky, overconfident handyman, that usually messes things up",
             "descLong": "a quirky, overconfident handyman who thinks he can fix anything, but usually makes things worse. He’s always seen with his toolbelt, even when he’s not working. He has a heart of gold, loves conspiracy theories, and has an unusual fondness for hotdogs.",
             "quirk": "Talks to his tools as if they’re his buddies.",
-            "props": ["Toolbelt", "Duct tape", "Broken radio", "Clipboard with notes", "Screws and nails"]
+            "props": ["Cookie", "Tool Belt"]
         },
         {
             "id": 2,
@@ -16,7 +16,7 @@
             "descShort": "free spirited artist, Animal loving, loves to collect random things",
             "descLong": "A free-spirited, animal-loving artist who never seems to finish a project. Maggie lives in a world of her own, surrounded by her collection of random things—like vintage birdcages, and stray animals. She’s always ready to give philosophical advice but can’t stick to a schedule.",
             "quirk": "Talks to animals like they can understand everything.",
-            "props": ["Paintbrush in hair", "Sketchpad", "Birdcage", "Scarves", "Animal figurines"]
+            "props": ["Clipboard", "Briefcase"]
         },
         {
             "id": 3,
@@ -25,7 +25,7 @@
             "descShort": "ULTRA NEAT, rule-following accountant, can’t stand chaos",
             "descLong": "The ultra-neat, rule-following accountant of the group. Ben is the most grounded character, often finding himself cleaning up everyone’s mess (literally and figuratively). He likes everything orderly and can’t stand chaos, but deep down, he wishes he could let loose.",
             "quirk": "Keeps emergency cleaning supplies.",
-            "props": ["Briefcase", "Calculator", "Mismatched socks", "Cleaning supplies", "Filing cabinet"]
+            "props": ["Paintbrush", "Cleaning Supplies"]
         },
         {
             "id": 4,
@@ -34,7 +34,7 @@
             "descShort": "Fashion-obsessed neighbor, sassy, confident",
             "descLong": "The fashion-obsessed neighbor who is always overdressed for every occasion. Lola’s dream is to become a famous stylist, and she loves helping everyone with their outfits—even if they don’t want it. She’s sassy, confident, and always on the hunt for the next big fashion trend.",
             "quirk": "Constantly critiques people's outfits, even in inappropriate situations.",
-            "props": ["Sewing kit", "Fashion magazines", "Mannequin", "Fabric swatches", "Sunglasses"]
+            "props": ["Sunglasses", "Hat"]
         },
         {
             "id": 5,
@@ -43,7 +43,7 @@
             "descShort": "sarcastic, coffee-loving barista, snappy, loves chaos",
             "descLong": "Rachel is the sarcastic, coffee-loving barista who’s always one step ahead of everyone’s snappy comebacks. She’s the voice of reason but isn’t afraid to get involved in the chaos, especially if it means making a point. Underneath her tough exterior, she’s a loyal friend who secretly roots for everyone's success.",
             "quirk": "Speaks in constant sarcasm and can’t function without her coffee.",
-            "props": ["Coffee mug", "Laptop", "Sunglasses", "Headphones", "Notebook"]
+            "props": ["Coffee Mug", "Notebook"]
         },
         {
             "id": 6,
@@ -52,7 +52,7 @@
             "descShort": "immature radio DJ, prankster, life of the party",
             "descLong": "The joker of the group, Gary never takes anything seriously. He’s the life of the party and the one with a prank always ready. Gary works as a radio DJ, using his charm and voice to entertain his listeners, but in real life, his immaturity often lands him in trouble.",
             "quirk": "Can’t stop making puns, even in serious moments.",
-            "props": ["Microphone", "Headphones", "Sunglasses", "Whoopee cushion", "Fake mustache"]
+            "props": ["Vacuum", "Air Horn"]
         },
         {
             "id": 7,
@@ -61,7 +61,7 @@
             "descShort": "gym loving fitness guru, sensitive, embraces the grind but is afraid of dogs",
             "descLong": "Todd is the gym-loving fitness guru who constantly talks about “gains” and “meal prepping,” but he’s got a surprisingly sweet, sensitive side. His over-the-top workout routines are hilarious, and he’s always encouraging the others to “embrace the grind.” Despite his muscles, he’s afraid of small dogs.",
             "quirk": "Has a secret love for romantic comedies.",
-            "props": ["Protein shake", "Dumbbells", "Yoga mat", "Sweatband", "Romantic comedy DVD"]
+            "props": ["Microphone", "TV Remote"]
         }
     ]
 }
