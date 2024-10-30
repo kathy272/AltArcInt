@@ -31,10 +31,12 @@ public class CharacterDataLoader : MonoBehaviour
     public GameObject characterPanelPrefab;
     public GameObject teamPanel;
     public GameObject AddCharacterPanel;
+    public Canvas CharacterProfileOverlay;
     private void Start()
     {
         LoadCharacterData();
         AddCharacterPanel.SetActive(true);
+        CharacterProfileOverlay.gameObject.SetActive(false);
     }
 
     public void LoadCharacterData()
@@ -140,6 +142,7 @@ public class CharacterDataLoader : MonoBehaviour
         Text CharacterCounterText = newCharacterPanel.transform.Find("CharacterNumber").GetComponent<Text>();
         RawImage characterImage = newCharacterPanel.transform.Find("CharacterImg").GetComponent<RawImage>();
         Button deleteButton = newCharacterPanel.transform.Find("DeleteButton").GetComponent<Button>();
+        Button characterDetailsButton = newCharacterPanel.transform.Find("CharacterDetailButton").GetComponent<Button>();
 
         // Update UI text components with character details
         nameText.text = selectedCharacter.name;
@@ -159,6 +162,7 @@ public class CharacterDataLoader : MonoBehaviour
         }
         Debug.Log("Delete button: " + deleteButton.name);
         deleteButton.onClick.AddListener(() => RemoveCharacter(selectedCharacter, newCharacterPanel)); // Pass panel to remove it
+        characterDetailsButton.onClick.AddListener(() => LoadCharacterDetails(selectedCharacter));
 
         // Load character image
         string imgPath = Path.Combine(characterImgPath, selectedCharacter.name + "Img.png");
@@ -270,9 +274,57 @@ public class CharacterDataLoader : MonoBehaviour
                 Destroy(child.gameObject);
             }
         }
+        //if AddCharacterPanel is not active, make it active
+        if (AddCharacterPanel.activeSelf == false)
+        {
+            AddCharacterPanel.SetActive(true);
+        }
         Debug.Log("RemoveAllCharacters called successfully");
 
     }
+    //if clicked on the name of the added character, display the character details in another scene
+    public void LoadCharacterDetails(Character character)
+    {
+        //replace the text with the selected character details
+        //get the text components from the overlay
+        Text nameText = CharacterProfileOverlay.transform.Find("CharacterName").GetComponent<Text>();
+        Text ageText = CharacterProfileOverlay.transform.Find("CharacterAge").GetComponent<Text>();
+        Text descText = CharacterProfileOverlay.transform.Find("CharacterDescription").GetComponent<Text>();
+        Text quirkText = CharacterProfileOverlay.transform.Find("CharacterQuirk").GetComponent<Text>();
+        List<string> props = GetProps();
+        Text propsText = CharacterProfileOverlay.transform.Find("CharacterProps").GetComponent<Text>();
+        //update the text components with the selected character details
+
+        nameText.text = character.name;
+        ageText.text = (character.age.ToString() + " years old");
+        descText.text = character.descLong;
+        quirkText.text = character.quirk;
+        //change the overlay to active
+        CharacterProfileOverlay.gameObject.SetActive(true);
+        //also get the path of the character image folder - name = character name + Img
+        string characterImgPath = "Assets/UI/CharacterImg/";
+        RawImage characterImage = CharacterProfileOverlay.transform.Find("CharacterImage").GetComponent<RawImage>();
+        //load the character image
+        string imgPath = Path.Combine(characterImgPath, character.name + "Img.png");
+        if (File.Exists(imgPath))
+        {
+            byte[] fileData = File.ReadAllBytes(imgPath);
+            Texture2D texture = new Texture2D(2, 2);
+            texture.LoadImage(fileData);
+            characterImage.texture = texture; // Assuming characterImage is a RawImage
+        }
+        else
+        {
+            Debug.LogError("Cannot load character image! File not found: " + imgPath);
+        }
+
+
+    }
+    public void CloseCharacterDetails()
+    {
+        CharacterProfileOverlay.gameObject.SetActive(false);
+    }
+
 
 }
 
