@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 public class CharacterManager : MonoBehaviour
 {
     public static CharacterManager Instance; // Singleton instance
+    private CharacterDataLoader CharacterDataLoader;
 
     private void Awake()
     {
@@ -18,11 +19,20 @@ public class CharacterManager : MonoBehaviour
         }
     }
 
+
     public Character selectedCharacter;
 
+
+    
     public void SetSelectedCharacter(Character character, SceneManager sceneManager)
     {
         selectedCharacter = character;
         sceneManager.LoadScene("ProfilePage"); 
+    }
+    public void RemoveCharacter(Character character, GameObject characterPanel)
+    {
+      CharacterDataLoader.selectedCharacters.Remove(character);
+        Destroy(characterPanel); // Destroy the panel from the UI
+        Debug.Log("Removed character: " + character.name);
     }
 }

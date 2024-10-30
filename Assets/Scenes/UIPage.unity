@@ -502,19 +502,10 @@ MonoBehaviour:
     props: []
   characterData:
     characters: []
-  characters: []
-  nameText: {fileID: 0}
-  ageText: {fileID: 0}
-  descShortText: {fileID: 0}
-  descLongText: {fileID: 0}
-  quirkText: {fileID: 0}
-  propsText: {fileID: 0}
-  characterImgPath: Assets/UI/CharacterImg/
-  characterImage: {fileID: 0}
   selectedCharacters: []
   characterPanelPrefab: {fileID: 1568069567}
   teamPanel: {fileID: 183260752}
-  deleteButton: {fileID: 0}
+  AddCharacterPanel: {fileID: 1860204157439507330}
   characterPanelParent: {fileID: 183260753}
   maxCharacterPanels: 4
 --- !u!4 &522293517
@@ -1786,10 +1777,14 @@ PrefabInstance:
     - target: {fileID: 3785593753618388976, guid: 5ee78bab183996f46992219e0fa21bae, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 522293515}
+      objectReference: {fileID: 0}
     - target: {fileID: 3785593753618388976, guid: 5ee78bab183996f46992219e0fa21bae, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7065159603613399715, guid: 5ee78bab183996f46992219e0fa21bae, type: 3}
+      propertyPath: m_Name
+      value: DeleteButton
       objectReference: {fileID: 0}
     - target: {fileID: 7956346415503968801, guid: 5ee78bab183996f46992219e0fa21bae, type: 3}
       propertyPath: m_Pivot.x
@@ -1881,6 +1876,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 420250367249524221, guid: 5ee78bab183996f46992219e0fa21bae, type: 3}
+    - {fileID: 5558156321493308336, guid: 5ee78bab183996f46992219e0fa21bae, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

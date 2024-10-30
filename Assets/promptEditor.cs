@@ -75,11 +75,14 @@ public class promptEditor : MonoBehaviour
         int playerCount = characterDataLoader.GetPlayerCount();
         int itemCount = characterDataLoader.GetProps().Count;
         string propNames = string.Join(", ", characterDataLoader.GetProps());
+        string playerNames = string.Join(", ", characterDataLoader.GetPlayerNames());
+        //get the list of the selected players
        
+
         if (itemCount > 0 &&  playerCount> 0 && !string.IsNullOrEmpty(scriptName.text))
         {
             // Create a comma-separated list of character names
-            string characterNames = string.Join(", ", playerNames);
+          //  string characterNames = string.Join(", ", playerNames);
             
             // Create a comma-separated list of prop names
            // string propNames = string.Join(", ", itemNames);
@@ -87,11 +90,14 @@ public class promptEditor : MonoBehaviour
             // Generate the script prompt
             textBox.text = "I would like you to create a 90's sitcom script that lasts about 90 seconds long. " +
                            "The script should have a clear start and end. The script should include " + 
-                           playerCount + " characters. The characters' names are " + characterNames + ". " +
+                           playerCount + " characters. The characters' names are " + playerNames + ". " +
                            "The script should include " + itemCount + " props. These props should be " + propNames + ". " +
                            "Finally, I would also like the script to be about a " + scriptName.text + ".";
 
             Debug.Log(textBox.text);
+            characterDataLoader.RemoveAllCharacters();
+
+
         }
 
         else if(itemCount == 0 && playerCount > 0 && !string.IsNullOrEmpty(scriptName.text))
@@ -105,12 +111,16 @@ public class promptEditor : MonoBehaviour
                             "The script should not include any props." + " Finally I would also like the script to be about a " + scriptName.text + "." ;
 
             Debug.Log(textBox.text);
+            characterDataLoader.RemoveAllCharacters();
+
+
         }
         Debug.Log("Please add at least one player and one item to the script.");
 
-       
-     
+
+
 
     }
+
 }
     

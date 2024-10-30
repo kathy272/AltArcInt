@@ -7,7 +7,6 @@ public class CharacterDataLoader : MonoBehaviour
 {
   
     public Character character;
-
     [System.Serializable]
     public class CharacterData
     {
@@ -15,27 +14,27 @@ public class CharacterDataLoader : MonoBehaviour
     }
 
     public CharacterData characterData; // Keep this to hold the loaded character data
-    public List<Character> characters; // List of available characters for selection
-
-    public Text nameText;
-    public Text ageText;
-    public Text descShortText;
-    public Text descLongText;
-    public Text quirkText;
-    public Text propsText;
+    private List<Character> availableCharacters; // List of available characters for selection
+    public List<Character> selectedCharacters = new List<Character>(); // List to hold selected characters
+    private int characterCounter = 1;
+    public Text CharacterCounterText;
+    private Text nameText;
+    private Text ageText;
+    private Text descShortText;
+    private Text descLongText;
+    private Text quirkText;
+    private Text propsText;
 
     //also get path of the character image folder - name = character name + Img
-    public string characterImgPath = "Assets/UI/CharacterImg/";
-    public RawImage characterImage;
-    public List<Character> selectedCharacters = new List<Character>(); // List to hold selected characters
+    private string characterImgPath = "Assets/UI/CharacterImg/";
+    private RawImage characterImage;
     public GameObject characterPanelPrefab;
     public GameObject teamPanel;
-    public Button deleteButton;
-
     public GameObject AddCharacterPanel;
     private void Start()
     {
         LoadCharacterData();
+        AddCharacterPanel.SetActive(true);
     }
 
     public void LoadCharacterData()
@@ -46,34 +45,26 @@ public class CharacterDataLoader : MonoBehaviour
         {
             string dataAsJson = File.ReadAllText(jsonPath);
             characterData = JsonUtility.FromJson<CharacterData>(dataAsJson); // Load data into characterData
-            characters = characterData.characters; // Initialize characters list from loaded data
-            Debug.Log("Loaded character data, total characters: " + characters.Count);
+            availableCharacters = characterData.characters; // Initialize characters list from loaded data
+            Debug.Log("Loaded character data, total characters: " + availableCharacters.Count);
         }
         else
         {
             Debug.LogError("Cannot load character data! File not found: " + jsonPath);
         }
     }
-
     public void DisplayRandomCharacter()
     {
-        if (characters.Count == 0)
-        {
-            Debug.LogError("No characters available to display.");
-            return; // Exit the method if there are no characters
-        }
+  
+        int randomIndex = Random.Range(0, availableCharacters.Count);
+        Character selectedCharacter = availableCharacters[randomIndex];
 
-        int randomIndex = Random.Range(0, characters.Count); // Use Count instead of 6
-        Debug.Log("Random index: " + randomIndex);
-        Character selectedCharacter = characters[randomIndex];
         if (!selectedCharacters.Contains(selectedCharacter))
         {
-            // Add the character to the selected list
             selectedCharacters.Add(selectedCharacter);
 
-            // Create a new UI panel for the character
+            // Create and update the character UI panel here...
             GameObject characterPanel = Instantiate(characterPanelPrefab, teamPanel.transform);
-            // Set the character info in the new panel
             Text[] texts = characterPanel.GetComponentsInChildren<Text>();
             texts[0].text = selectedCharacter.name;
             texts[1].text = selectedCharacter.age.ToString();
@@ -84,40 +75,60 @@ public class CharacterDataLoader : MonoBehaviour
             if (selectedCharacter.props.Count > 0)
             {
                 int propIndex = Random.Range(0, selectedCharacter.props.Count);
-                texts[5].text = selectedCharacter.props[propIndex]; // Assuming props is the sixth text component
+                texts[5].text = selectedCharacter.props[propIndex];
             }
 
-            characters.RemoveAt(randomIndex);
+            availableCharacters.RemoveAt(randomIndex); 
+           
+
         }
         else
         {
             Debug.Log("Character already selected.");
+        }
+    }
 
+
+
+ 
+
+    //if clicked on character name in panel, will display the character details in another scene
+    public void DisplayCharacterDetails(Character character)
+    {
+        nameText.text = character.name;
+        ageText.text = character.age.ToString();
+        descShortText.text = character.descShort;
+        descLongText.text = character.descLong;
+        quirkText.text = character.quirk;
+
+        if (character.props.Count > 0)
+        {
+            int propIndex = Random.Range(0, character.props.Count);
+            propsText.text = character.props[propIndex];
         }
     }
     public Transform characterPanelParent; // The parent object to hold all character panels
-    public int maxCharacterPanels = 5; // Maximum number of character panels to display
+    public int maxCharacterPanels = 4; // Maximum number of character panels to display
     public void LoadCharacterCard()
     {
         // Check if there are characters available to display
-        if (characters.Count == 0)
+        if (availableCharacters.Count == 0)
         {
-            Debug.LogError("No characters available to display.");
+            Debug.Log("No available characters.");
             return;
         }
-        if (characterPanelParent.childCount >= maxCharacterPanels)
+        if (selectedCharacters.Count == maxCharacterPanels)
         {
             //hide AddPanel
             AddCharacterPanel.SetActive(false);
             Debug.LogWarning("Maximum number of character panels reached. Cannot add more.");
             return; 
         }
-        AddCharacterPanel.SetActive(true);
 
         // Select a random character from the list
-        int randomIndex = Random.Range(0, characters.Count);
+        int randomIndex = Random.Range(0, availableCharacters.Count);
         Debug.Log("Random index: " + randomIndex);
-        Character selectedCharacter = characters[randomIndex];
+        Character selectedCharacter = new List<Character>(availableCharacters)[randomIndex];
 
         // Instantiate a new character panel from the prefab
         GameObject newCharacterPanel = Instantiate(characterPanelPrefab, characterPanelParent);
@@ -126,11 +137,14 @@ public class CharacterDataLoader : MonoBehaviour
         Text nameText = newCharacterPanel.transform.Find("Name").GetComponent<Text>();
         Text descShortText = newCharacterPanel.transform.Find("Description").GetComponent<Text>();
         Text propsText = newCharacterPanel.transform.Find("Props").GetComponent<Text>();
+        Text CharacterCounterText = newCharacterPanel.transform.Find("CharacterNumber").GetComponent<Text>();
         RawImage characterImage = newCharacterPanel.transform.Find("CharacterImg").GetComponent<RawImage>();
+        Button deleteButton = newCharacterPanel.transform.Find("DeleteButton").GetComponent<Button>();
 
         // Update UI text components with character details
         nameText.text = selectedCharacter.name;
         descShortText.text = selectedCharacter.descShort;
+        CharacterCounterText.text = "Character " + selectedCharacter.name;
 
         // Get a random prop
         if (selectedCharacter.props.Count > 0) // Check if there are props available
@@ -143,6 +157,8 @@ public class CharacterDataLoader : MonoBehaviour
         {
             propsText.text = "No props available";
         }
+        Debug.Log("Delete button: " + deleteButton.name);
+        deleteButton.onClick.AddListener(() => RemoveCharacter(selectedCharacter, newCharacterPanel)); // Pass panel to remove it
 
         // Load character image
         string imgPath = Path.Combine(characterImgPath, selectedCharacter.name + "Img.png");
@@ -162,7 +178,7 @@ public class CharacterDataLoader : MonoBehaviour
 
         AddCharacter(selectedCharacter);
         // Remove the character from the list to avoid re-selection
-        characters.RemoveAt(randomIndex);
+        availableCharacters.RemoveAt(randomIndex);
     }
 
     //get all the playerNames that are added
@@ -225,7 +241,38 @@ public class CharacterDataLoader : MonoBehaviour
         return selectedCharacters.Count;
     }
 
-  
+    //if clicked on delete button, remove the character from the list
+    public void RemoveCharacter(Character character, GameObject characterPanel)
+    {
+        if (AddCharacterPanel.activeSelf == false)
+        {
+            AddCharacterPanel.SetActive(true);
+        }
+        selectedCharacters.Remove(character); // Remove character from list
+        Destroy(characterPanel); // Destroy the panel from the UI
+        availableCharacters.Add(character); // Add character back to available list
+        Debug.Log("Removed character: " + character.name);
+
+
+    }
+    public void RemoveAllCharacters() 
+    {
+        Debug.Log("RemoveAllCharacters called successfully");
+        selectedCharacters.Clear();
+        availableCharacters.Clear();
+        LoadCharacterData();
+
+        //also remove all the character panels
+        foreach (Transform child in characterPanelParent)
+        {
+            if (child.name != "AddCharacterPanel")
+            {
+                Destroy(child.gameObject);
+            }
+        }
+        Debug.Log("RemoveAllCharacters called successfully");
+
+    }
 
 }
 
