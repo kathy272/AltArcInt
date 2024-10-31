@@ -7,5 +7,6 @@ public class Character
 {
     public string name;
     public string descShort;
+    public string charColor;
     public List<string> props;
 }

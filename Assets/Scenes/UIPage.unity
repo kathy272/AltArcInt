@@ -346,6 +346,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   llmCharacter: {fileID: 427907750}
   promptText: {fileID: 465788725}
+  characterDataLoaderRef: {fileID: 0}
   aiText: {fileID: 1727045494}
   scrollSpeed: 50
   StartGenerationBtn: {fileID: 1319633513}
@@ -755,6 +756,7 @@ MonoBehaviour:
   character:
     name: 
     descShort: 
+    charColor: 
     props: []
   characterData:
     characters: []
@@ -762,6 +764,7 @@ MonoBehaviour:
   characterPanelPrefab: {fileID: 1568069567}
   AddCharacterPanel: {fileID: 1860204157439507330}
   characterPanelParent: {fileID: 183260753}
+  scriptLoadingParent: {fileID: 1085486546}
   maxCharacterPanels: 4
 --- !u!4 &522293517
 Transform:

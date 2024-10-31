@@ -6,6 +6,7 @@ using System.Net.Mime;
 using System.Threading.Tasks;
 using LLMUnity;
 using TMPro;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace LLMUnitySamples
@@ -14,6 +15,8 @@ namespace LLMUnitySamples
     {
         public LLMCharacter llmCharacter;
         public Text promptText;
+
+        public CharacterDataLoader characterDataLoaderRef;
         
         [SerializeField] private TextMeshProUGUI aiText;
         private string _aiResponseText;
@@ -63,12 +66,12 @@ namespace LLMUnitySamples
             Task chatTask = llmCharacter.Chat(promptText.text, (responseText) =>
             {
                 _aiResponseText = responseText;
-               
             },OnFullResponseReceived);
         }
         
         public void OnFullResponseReceived()
         {
+            characterDataLoaderRef.RemoveAllCharacters();
             SetAIResponseText(_aiResponseText);
         }
 

@@ -40,10 +40,7 @@ public class promptEditor : MonoBehaviour
                            "The script should include " + itemCount + " props. These props should be " + propNames + ". " +
                            "Finally, I would also like the script to be about a " + scriptName.text + ".";
 
-            Debug.Log(textBox.text);
-            characterDataLoader.RemoveAllCharacters();
-
-
+            characterDataLoader.MoveCharactersToSecondScreen();
         }
 
         else if(itemCount == 0 && playerCount > 0 && !string.IsNullOrEmpty(scriptName.text))
@@ -57,16 +54,10 @@ public class promptEditor : MonoBehaviour
                             "No new characters should be introduced" +
                             "The script should not include any props." + " Finally I would also like the script to be about a " + scriptName.text + "." ;
 
-            Debug.Log(textBox.text);
             characterDataLoader.RemoveAllCharacters();
 
 
         }
-        Debug.Log("Please add at least one player and one item to the script.");
-
-
-
-
     }
 
 }
