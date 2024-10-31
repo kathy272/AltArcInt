@@ -188,24 +188,19 @@ public class CharacterDataLoader : MonoBehaviour
     }
     public void RemoveAllCharacters() 
     {
+        Debug.Log("1");
         selectedCharacters.Clear();
+        Debug.Log("2");
         availableCharacters.Clear();
+        Debug.Log("3");
         LoadCharacterData();
-
-        //also remove all the character panels
-        foreach (Transform child in characterPanelParent)
+        Debug.Log("4");
+        
+        foreach (Transform child in scriptLoadingParent)
         {
-            if (child.name != "AddCharacterPanel")
-            {
-                Destroy(child.gameObject);
-            }
-        }
-        //if AddCharacterPanel is not active, make it active
-        if (AddCharacterPanel.activeSelf == false)
-        {
-            AddCharacterPanel.SetActive(true);
-        }
-
+            Debug.Log("5");
+            Destroy(child.gameObject);
+        }   
     }
 
 
@@ -213,7 +208,6 @@ public class CharacterDataLoader : MonoBehaviour
     {
         List<Transform> childrenToMove = new List<Transform>();
 
-        // First, collect all children that need to be processed.
         foreach (Transform child in characterPanelParent)
         {
             if (child.name != "AddCharacterPanel")
@@ -222,10 +216,8 @@ public class CharacterDataLoader : MonoBehaviour
             }
         }
 
-        // Now, perform the operations on the collected children.
         foreach (Transform child in childrenToMove)
         {
-            // Move the child to the new parent
             child.SetParent(scriptLoadingParent);
 
             // Disable the DeleteButton

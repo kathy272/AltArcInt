@@ -25,12 +25,14 @@ namespace LLMUnitySamples
         
         public float scrollSpeed = 50;
 
-        public Button StartGenerationBtn;
-        public GameObject ScrollSpeeds;
+        public GameObject addCharactersBtn;
+        public Button startGenerationBtn;
+        public GameObject scrollSpeeds;
         
         void Start()
         {
-            ScrollSpeeds.SetActive(false);
+            scrollSpeeds.SetActive(false);
+            
             _characterColors = new Dictionary<string, string>
             {
                 { "Jake", "<color=#FFD1BA>" },  // Apricot
@@ -61,18 +63,23 @@ namespace LLMUnitySamples
 
         public void StartGeneration()
         {
-            StartGenerationBtn.gameObject.SetActive(false);
-            ScrollSpeeds.SetActive(true);
+            addCharactersBtn.SetActive(false);
+            startGenerationBtn.gameObject.SetActive(false);
+            scrollSpeeds.SetActive(true);
+            
+            
             Task chatTask = llmCharacter.Chat(promptText.text, (responseText) =>
             {
+                Debug.Log("Loading...");
                 _aiResponseText = responseText;
             },OnFullResponseReceived);
         }
         
         public void OnFullResponseReceived()
         {
-            characterDataLoaderRef.RemoveAllCharacters();
             SetAIResponseText(_aiResponseText);
+
+            characterDataLoaderRef.RemoveAllCharacters();
         }
 
         public void ExitGame()
@@ -118,8 +125,13 @@ namespace LLMUnitySamples
                 yield return null; 
             }
             rectTransform.anchoredPosition = new Vector2(0,startY);
-            ScrollSpeeds.SetActive(false);
-            StartGenerationBtn.gameObject.SetActive(true);
+            
+            
+            scrollSpeeds.SetActive(false);
+            startGenerationBtn.gameObject.SetActive(true);
+            addCharactersBtn.SetActive(true);
+            
+            
             aiText.text = "Loading...";
         }
 
